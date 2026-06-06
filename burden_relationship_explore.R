@@ -97,6 +97,7 @@ prob = vc_int + (1-vc_int) * (1-1/(1 + exp(-vc_decline*(poverty - vc_slope_shift
 lines(poverty, prob,  col = "red")
 
  
-# Import burden parameters and state level data
-params <- read_csv("data/clean/burden_parameters.csv")
+
+
+
 

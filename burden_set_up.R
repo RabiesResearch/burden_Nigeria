@@ -24,6 +24,8 @@ states$hdr = params$hdr_int[i] + (params$muslim_slope[i] * states$muslim)
 # create dog pop by state as a function of estimated hdr
 states$dogs = states$humans / states$hdr
 
+write.csv(states, "data/state_data_with_burden_params.csv", row.names = F)
+
 # TO DO
 # incorporate urban/ peri-urban/ rural data from Grace
 # include a parameter to define if states have dog meat trade or not - expect dog meat to reduce HDR 

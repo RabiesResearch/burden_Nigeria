@@ -25,8 +25,8 @@ source("./scripts/HelperFun.R")
 
 decision_tree <- function(N = 10, pop = 35e6, HDR = c(16,17), unowned_prop = 0, horizon = 5, 
                           mu = 0.38, k = 0.72, pPEP_exposure = 0.6, bpi = 15.3,
-                          pDeath = 0.17, pPrevent_complete = 0.999, 
-                          pPrevent_incomplete = 0.986, rabies_inc = c(0.0075, 0.0125), mdv_unowned_budget = NULL, 
+                          pDeath = 0.17, pPrevent = 0.986, 
+                          rabies_inc = c(0.0075, 0.0125), mdv_unowned_budget = NULL, 
                           mdv_owned_budget = NULL,vaccinate_owned_dog_cost = c(0.5, 1), 
                           vaccinate_unowned_dog_cost = c(0, 0), base_vax_cov_owned = 0.2,   
                           target_vax_cov_owned = 0.2, base_vax_cov_unowned = 0, target_vax_cov_unowned = 0,
@@ -127,7 +127,7 @@ decision_tree <- function(N = 10, pop = 35e6, HDR = c(16,17), unowned_prop = 0, 
   ## 5B: Deaths averted  ########
   ### PEP
   ts_deaths_averted_PEP   <- matrix(
-    rbinom(N * horizon, as.vector(ts_exp_PEP),   pPrevent_incomplete   * pDeath), N, horizon)
+    rbinom(N * horizon, as.vector(ts_exp_PEP),   pPrevent   * pDeath), N, horizon)
   
 
   # ---------------------------------------------------------------------------#
@@ -194,15 +194,16 @@ load_rabies_models()   # <-- call once; cached for the whole session
 tmp <- decision_tree(
               N = 10, pop = 35e6, HDR = c(16,17), unowned_prop = 0, horizon = 5, 
               mu = 0.38, k = 0.72, pPEP_exposure = 0.6, bpi = 15.3,
-              pDeath = 0.17, pPrevent_complete = 0.999, 
-              pPrevent_incomplete = 0.986, rabies_inc = c(0.0075, 0.0125), mdv_unowned_budget = NULL, 
+              pDeath = 0.17, 
+              pPrevent = 0.986, rabies_inc = c(0.0075, 0.0125), mdv_unowned_budget = NULL, 
               mdv_owned_budget = NULL,vaccinate_owned_dog_cost = c(0.5, 1), 
               vaccinate_unowned_dog_cost = c(0, 0), base_vax_cov_owned = 0.2,   
               target_vax_cov_owned = 0.2, base_vax_cov_unowned = 0, target_vax_cov_unowned = 0,
               years_to_target = 3, seed = 123, 
-              dog_burnin = 1
+              dog_burnin = 3
             )
 
 names(tmp)
 tmp$ts_exposures
 tmp$ts_rabid_dogs
+tmp$ts_deaths

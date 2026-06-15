@@ -38,7 +38,7 @@ cu = 3
 bu = 25
 hdr = cu + urban * bu
 
-plot(rural, hdr,  type = "l",  xlab = "Predictor", ylab = "Predicted probability", 
+plot(urban, hdr,  type = "l",  xlab = "Predictor", ylab = "Predicted probability", 
      xlim = c(0,1), ylim = c(0,30))
 
 # decreases with % muslim

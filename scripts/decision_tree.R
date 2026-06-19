@@ -27,7 +27,7 @@ decision_tree <- function(N = 10, pop = 35e6, HDR = c(16,17), unowned_prop = 0, 
                           mu = 0.38, k = 0.72, pPEP_exposure = 0.6, bpi = 15.3,
                           pDeath = 0.17, pPrevent = 0.986, 
                           rabies_inc = c(0.0075, 0.0125), mdv_unowned_budget = NULL, 
-                          mdv_owned_budget = NULL,vaccinate_owned_dog_cost = c(0.5, 1), 
+                          mdv_owned_budget = NULL,vaccinate_owned_dog_cost = c(0, 0), 
                           vaccinate_unowned_dog_cost = c(0, 0), base_vax_cov_owned = 0.2,   
                           target_vax_cov_owned = 0.2, base_vax_cov_unowned = 0, target_vax_cov_unowned = 0,
                           years_to_target = 3, seed = 123, 
@@ -119,15 +119,14 @@ decision_tree <- function(N = 10, pop = 35e6, HDR = c(16,17), unowned_prop = 0, 
   ## 5A: deaths ########
   # ---------------------------------------------------------------------------#
 
-  ts_deaths_no_PEP <- matrix(
+  ts_deaths <- matrix(
     rbinom(N * horizon, as.vector(ts_exp_noPEP), pDeath), N, horizon)
   
-  ts_deaths <- ts_deaths_no_PEP
-  
+
   ## 5B: Deaths averted  ########
   ### PEP
-  ts_deaths_averted_PEP   <- matrix(
-    rbinom(N * horizon, as.vector(ts_exp_PEP),   pPrevent   * pDeath), N, horizon)
+  # ts_deaths_averted_PEP   <- matrix(
+  #   rbinom(N * horizon, as.vector(ts_exp_PEP),   pPrevent   * pDeath), N, horizon)
   
 
   # ---------------------------------------------------------------------------#
@@ -146,7 +145,7 @@ decision_tree <- function(N = 10, pop = 35e6, HDR = c(16,17), unowned_prop = 0, 
       rabies_inc = rabies_inc, mu = mu, k = k, seed = seed,
       pop_serengeti = 1e5, split_by = "mean")$ts_exposures)
   
-  ts_deaths_averted_MDV  <- (exposures_no_MDV - rabies_results$ts_exposures) * pDeath # deterministic to reduce MCMC noise (may lead to NAs)
+  #ts_deaths_averted_MDV  <- (exposures_no_MDV - rabies_results$ts_exposures) * pDeath # deterministic to reduce MCMC noise (may lead to NAs)
   # ts_deaths_averted_MDV2 <- matrix(
   #   rbinom(N * horizon, pmax(0L, as.vector(exposures_no_MDV - rabies_results$ts_exposures)), pDeath),
   #   N, horizon)
@@ -175,7 +174,6 @@ decision_tree <- function(N = 10, pop = 35e6, HDR = c(16,17), unowned_prop = 0, 
   rabies_ts <- rabies_results[grep("^ts_", names(rabies_results))]
   dogs_ts   <- vax_results[grep("^ts_", names(vax_results))]
   
-  # CHANGE: burn-in already stripped, so NO second stripping here
   out_matrices <- c(out_matrices, rabies_ts, dogs_ts)
   
   return(out_matrices)
@@ -192,18 +190,14 @@ decision_tree <- function(N = 10, pop = 35e6, HDR = c(16,17), unowned_prop = 0, 
 load_rabies_models()   # <-- call once; cached for the whole session
 
 tmp <- decision_tree(
-              N = 10, pop = 35e6, HDR = c(16,17), unowned_prop = 0, horizon = 5, 
-              mu = 0.38, k = 0.72, pPEP_exposure = 0.6, bpi = 15.3,
-              pDeath = 0.17, 
-              pPrevent = 0.986, rabies_inc = c(0.0075, 0.0125), mdv_unowned_budget = NULL, 
-              mdv_owned_budget = NULL,vaccinate_owned_dog_cost = c(0.5, 1), 
-              vaccinate_unowned_dog_cost = c(0, 0), base_vax_cov_owned = 0.2,   
-              target_vax_cov_owned = 0.2, base_vax_cov_unowned = 0, target_vax_cov_unowned = 0,
-              years_to_target = 3, seed = 123, 
-              dog_burnin = 3
+              N = 10, pop = 35e6, HDR = c(16,17), horizon = 5, 
+              mu = 0.38, k = 0.72, pPEP_exposure = 0.6, 
+              pDeath = 0.17, pPrevent = 0.986, rabies_inc = c(0.0075, 0.0125), base_vax_cov_owned = 0.2,   
+              target_vax_cov_owned = 0.2, seed = 123
             )
 
 names(tmp)
 tmp$ts_exposures
 tmp$ts_rabid_dogs
 tmp$ts_deaths
+summarise_stochasticity(tmp$ts_deaths)

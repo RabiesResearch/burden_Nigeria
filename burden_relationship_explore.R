@@ -1,14 +1,17 @@
 #   Key relationships to consider when estimating the burden of rabies in Nigeria
-#  Estimates of PEP seeking - pPEP likely increases with wealth i.e. lower poverty index (scales from 0-1)
+#  Estimates of PEP seeking - pPEP likely increases with wealth 
+# i.e. a low poverty index means the state is wealthier!
+
 poverty = seq(0,1,0.05)
-prob = 1 / (1 + exp(poverty))
 
 # p = 1 / (1 + e^−(β₀ + β₁x))
-b0 <- 0  # intercept
-b1 <- 5 # slope
+b0 <- 0  # intercept - baseline level
+b1 <- 1 # slope - steepness
+U = 1
+L = 0.5
 
 # Apply inverse logit manually
-pPEP_prob_seq <- 1 / (1 + exp(-(b0 + b1 * poverty)))
+pPEP_prob_seq <- (U - L) / (1 + exp(b0 + -b1 * poverty))
 
 # Plot
 plot(poverty, pPEP_prob_seq,  type = "l", ylim = c(0, 1), 

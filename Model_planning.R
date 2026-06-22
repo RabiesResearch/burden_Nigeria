@@ -1,32 +1,23 @@
 # Model planning
-
+#___________________________________________________________________________________
+# early Jun 2026
 # 1. Make a function to take the parameters from the state_data_burden_parameters csv file
 # and feed them into the model to generate the outputs of interest (deaths, exposures, etc) for each state.
-
-# 2. Try to make sure this works by running one or two states with your function
-
-# 3. When the model runs, you will get useful outputs that you need to store and present 
-# in a way that is useful for the next steps. 
+# 2. Make sure this works by running one or two states with your function
+# 3. When the model runs, store the outputs so you can present them in a way that is useful for the next steps. 
 # For example, save the outputs in a csv file with the state name, and the average annual (or 10 year total) deaths & 95% CIs
 # Plot the timeseries of deaths with the 95% confidence intervals over the 10 year period for each state.
-
-# 4. Now you have done this for one state, you can run the model for all states and save the outputs in a single file.
-
+# 4. Now you have done this for one state, run the model for all states and save the outputs in a single file.
 # While trying out your code to see that it works, only do a small number of runs! e.g 10 to 100.
-# When you are sure your code will produce nice outputs, then you can run the model for a larger 
-# number of runs (e.g. 1000) to get more robust estimates of the outputs of interest.
-
-# make sure the outputs that you save are formatted in a way that allows you to easily read and 
-# compare the values across different states!
-# Ideally make a plot that shows you the timeseries in each state
-# OR EVEN BETTER - make a map with the states coloured by the total deaths
+# When you are sure your code will produce nice outputs, then you can run the model for  more runs (e.g. 1000) to get robust estimates of outputs of interest.
+# make sure the saved outputs are formatted in a way that allows you to easily read and compare the values across different states!
+# Ideally make a plot that shows you the timeseries in each state OR EVEN BETTER - make a map with the states coloured by the total deaths!
 
 #——————————————————————————————————————————————————————————————————————
-# Now to explore if the model is producing what you think it should!
+# late Jun 2026
+# 1. Rerun the burden set up file with the revisions to the burden_relationship that I have just pushed to Github
 
-# 1. Rerun the burden set up file withe the revisions to the burden_relationship that I push to github
-
-# 2. come up with a variable for the dog meat trade by state
+# 2. come up with a variable for the dog meat trade by state (push to Github when done so we can include!)
 
 # 3. Plot a set of maps to compare different things together: 
 # - i) poverty index, ii) population, ii) religion, iv) dogs, v) vaccination coverage, vi) Probability of PEP, vii) dog meat rade (tendency or yes/no)

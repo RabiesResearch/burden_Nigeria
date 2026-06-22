@@ -1,5 +1,5 @@
-﻿level,pPEP_int,pPEP_slope,hdr_int,urban_slope,muslim_slope,hdr_combo_slope,vc_decline,vc_slope_shift,vc_int
-high,0.5,10,5,25,25,-25,4,0.25,0.05
-avg,0,5,3,25,25,-5,6,0.05,0.005
-low,-1,5,0,25,25,-15,6,0.001,0
-lowest,-1,2,NA,NA,NA,NA,NA,NA,NA
+﻿level,pPEP_int,pPEP_slope,pPEP_U,pPEP_L,hdr_min,urban_max,muslim_max,hdr_combo_slope,vc_decline,vc_slope_shift,vc_int
+high,-1,2,1,0.4,3,25,25,-25,4,0.25,0.1
+avg,-1,3,1,0.4,3,25,25,-5,6,0.05,0.05
+low,-1,6,1,0.4,3,25,25,-15,6,0.001,0.05
+lowest,-1,8,1,0.4,2,25,25,-15,10,0.001,0.05

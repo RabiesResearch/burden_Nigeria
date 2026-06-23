@@ -37,7 +37,7 @@ outputs_to_keep <- c(
 
 
 # function to run per state
-run_one_state <- function(row, N = 10, horizon = 5, seed = 123) {
+run_one_state <- function(row, N = 100, horizon = 10, seed = 123) {
   
   state_name <- row$state
   
@@ -76,10 +76,45 @@ run_one_state <- function(row, N = 10, horizon = 5, seed = 123) {
 # run across states
 all_state_summaries <- map_dfr(
   seq_len(nrow(parameters_df)),
-  ~ run_one_state(parameters_df[.x, ], N = 10, horizon = 5, seed = 123 + .x)
+  ~ run_one_state(parameters_df[.x, ], N = 100, horizon = 10, seed = 123 + .x)
 )
 
 
 head(all_state_summaries)
+glimpse(all_state_summaries)
+names(all_state_summaries)
+
+write.csv(all_state_summaries,
+          "output/State_summaries.csv",
+          row.names = FALSE)
+
+
+
+death_summary <- all_state_summaries %>%
+  filter(output == "ts_deaths") %>%
+  group_by(state, scenario) %>%
+  summarise(
+    total_LL = sum(LL, na.rm = TRUE),
+    total_Median = sum(Median, na.rm = TRUE),
+    total_UL = sum(UL, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  mutate(
+    Median_LL_UL = paste0(round(total_Median),
+                          " (", round(total_LL), "-", round(total_UL), ")")
+  )
+
+write.csv(death_summary,
+          "output/Total_deaths.csv",
+          row.names = FALSE)
+
+
+
+deaths_ts <- all_state_summaries %>%
+  filter(output == "ts_deaths")
+
+write.csv(deaths_ts,
+          "output/deaths_ts.csv",
+          row.names = FALSE)
 
 

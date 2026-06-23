@@ -25,7 +25,7 @@ source("./scripts/HelperFun.R")
 
 decision_tree <- function(N = 10, pop = 35e6, HDR = c(16,17), unowned_prop = 0, horizon = 5, 
                           mu = 0.38, k = 0.72, pPEP_exposure = 0.6, bpi = 15.3,
-                          pDeath = 0.17, pPrevent = 0.986, 
+                          pDeath = 0.17, pPrevent = 0.986, vaccine_vials_per_pt = 2,
                           rabies_inc = c(0.0075, 0.0125), mdv_unowned_budget = NULL, 
                           mdv_owned_budget = NULL,vaccinate_owned_dog_cost = c(0, 0), 
                           vaccinate_unowned_dog_cost = c(0, 0), base_vax_cov_owned = 0.2,   
@@ -105,6 +105,8 @@ decision_tree <- function(N = 10, pop = 35e6, HDR = c(16,17), unowned_prop = 0, 
   #ts_exp  <- rabies_results$ts_exposures
 
   ts_exp_PEP   <- matrix(rbinom(N * horizon, as.vector(rabies_results$ts_exposures),   pPEP_exposure), N, horizon)
+  
+  ts_vaccine_vials <-  ts_exp_PEP * vaccine_vials_per_pt
   
   ts_exp_noPEP <- rabies_results$ts_exposures - ts_exp_PEP
   

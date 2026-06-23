@@ -29,6 +29,7 @@ outputs_to_keep <- c(
   "ts_deaths",
   "ts_exposures",
   "ts_exp_PEP",
+  "ts_vaccine_vials",
   "ts_rabid_dogs"
 )
 

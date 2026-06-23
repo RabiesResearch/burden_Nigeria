@@ -1,5 +1,7 @@
 
 
+source("./scripts/decision_tree.R")
+
 # Read state parameters
 parameters_df <- read.csv("./data/state_data_with_burden_params.csv") %>%
   dplyr::select(state, humans, hdr, pPEP, vax_dogs) %>%

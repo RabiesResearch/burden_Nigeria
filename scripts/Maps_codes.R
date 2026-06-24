@@ -31,44 +31,38 @@ Rabies_deaths_Nigeria <- merge(states,Rabies_death_Map, by.x = "ADM1_EN", by.y =
 
 # Create custom categories with your ranges
 
-
 Rabies_deaths_Nigeria$death_category <- cut(
   Rabies_deaths_Nigeria$Total_deaths,
-  breaks = c(0, 50, 100, 200, 300, 500, 1000, 2000, 3000, 4000, 5000, 6000),
+  breaks = c(300, 500, 1000, 2000, 3000, 4000, 5000, 6000),
   labels = c(
-    "0–50", "50–100", "100–200", "200–300",
-    "300–500", "500–1000", "1000–2000",
-    "2000–3000", "3000–4000", "4000–5000", "5000–6000"
+    "300-500", "500-1000", "1000-2000",
+    "2000-3000", "3000-4000", "4000-5000", "5000-6000"
   ),
   include.lowest = TRUE
 )
-unique(Rabies_deaths_Nigeria$Total_deaths)
 
 ggplot(Rabies_deaths_Nigeria) +
   geom_sf(aes(fill = death_category), color = "grey60", linewidth = 0.2) +
-  geom_sf_text(aes(label = ADM1_EN), size = 2, color = "black") +
+  geom_sf_text(aes(label = ADM1_EN), size = 2) +
   scale_fill_manual(
     values = c(
-      
-      "0–50" = "#fff5f0",
-      "50–100" = "#fee0d2",
-      "100–200" = "#fcbba1",
-      "200–300" = "#fc9272",
-      "300–500" = "#fb6a4a",
-      "500–1000" = "#ef3b2c",
-      "1000–2000" = "#cb181d",
-      "2000–3000" = "#a50f15",
-      "3000–4000" = "#800026",
-      "4000–5000" = "#66001f",
-      "5000–6000" = "#4a0015"
+      "300-500"   = "#fee0d2",
+      "500-1000"  = "#fc9272",
+      "1000-2000" = "#fb6a4a",
+      "2000-3000" = "#ef3b2c",
+      "3000-4000" = "#cb181d",
+      "4000-5000" = "#800026",
+      "5000-6000" = "#66001f"
     ),
-    
     name = "Total deaths"
-    
   ) +
   theme_void() +
-  theme(legend.position = c(0.92, 0.3)) +
-  labs(title = "Annual total deaths per state")
+  theme(legend.position = c(0.93, 0.3)) +
+  labs(title = "Estimated Total Rabies Deaths by States in Nigeria (10-Year Period)")
+
+
+    
+
 
 
 

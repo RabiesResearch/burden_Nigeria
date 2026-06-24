@@ -118,3 +118,66 @@ write.csv(deaths_ts,
           row.names = FALSE)
 
 
+# Step 1: Filter only the variables you want for Maps
+State_sum <- read.csv("output/State_summaries.csv")
+filtered_data <- State_sum %>%
+  filter(output %in% c("ts_deaths", "ts_exp_PEP", "ts_rabid_dogs"))
+
+# Step 2: Calculate mean (average) across 10 years
+mean_results <- filtered_data %>%
+  group_by(state, output) %>%
+  summarise(
+    mean_value = mean(Median, na.rm = TRUE),
+    mean_LL = mean(LL, na.rm = TRUE),
+    mean_UL = mean(UL, na.rm = TRUE),
+    .groups = "drop"
+  )
+# to turn output into clean columns
+
+#  Rename columns
+
+mean_results_clean <- mean_results %>%
+  rename(
+    mean = mean_value,
+    LL = mean_LL,
+    UL = mean_UL
+  )
+
+# Pivot using the cleaned dataset
+Clean_mean_tables <- mean_results_clean %>%
+  pivot_wider(
+    names_from = output,
+    values_from = c(mean, LL, UL),
+    
+    names_glue = "{output}_{.value}"
+  )
+
+#caculate the incidence per states
+deaths_ts<-read.csv("output/deaths_ts.csv")
+
+Rabies_deaths <- deaths_ts %>%
+  rename(Total_deaths = Median)
+
+population <-parameters_df%>%
+  rename(population = pop)
+
+# Merge
+merged <- deaths_ts %>%
+  left_join(parameters_df, by = "state")
+
+# Step 1: calculate yearly incidence (deaths per 100,000 per year)
+merged_incidence<- merged %>%
+  mutate(incidence_100000 = (Median / pop) * 100000)
+write.csv(merged_incidence,
+          "output/Incidence per year.csv",
+          row.names = FALSE)
+# Step 2: average across 10 years
+
+mean_incidence <- merged_incidence %>%   
+  group_by(state) %>%
+  summarise(mean_annual_incidence = mean(incidence_100000, na.rm = TRUE))
+#copy model results to output
+write.csv(mean_incidence,
+          "output/Annual_death_Incidence_Per_100,000_year.csv",
+          row.names = FALSE)
+

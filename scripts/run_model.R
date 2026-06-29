@@ -76,7 +76,7 @@ run_one_state <- function(row, N = 100, horizon = 10, seed = 123) {
 # run across states
 all_state_summaries <- map_dfr(
   seq_len(nrow(parameters_df)),
-  ~ run_one_state(parameters_df[.x, ], N = 100, horizon = 10, seed = 123 + .x)
+  ~ run_one_state(parameters_df[.x, ], N = 1000, horizon = 10, seed = 123 + .x)
 )
 
 

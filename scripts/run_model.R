@@ -37,7 +37,7 @@ outputs_to_keep <- c(
 
 
 # function to run per state
-run_one_state <- function(row, N = 100, horizon = 10, seed = 123) {
+run_one_state <- function(row, N = 1000, horizon = 10, seed = 123) {
   
   state_name <- row$state
   
@@ -88,38 +88,26 @@ write.csv(all_state_summaries,
           "output/State_summaries.csv",
           row.names = FALSE)
 
+State_sum <- read.csv("output/State_summaries.csv")
 
 
-death_summary <- all_state_summaries %>%
+
+death_summary <- State_sum %>%
   filter(output == "ts_deaths") %>%
-  group_by(state, scenario) %>%
+  group_by(state) %>%
   summarise(
-    total_LL = sum(LL, na.rm = TRUE),
     total_Median = sum(Median, na.rm = TRUE),
-    total_UL = sum(UL, na.rm = TRUE),
-    .groups = "drop"
-  ) %>%
-  mutate(
-    Median_LL_UL = paste0(round(total_Median),
-                          " (", round(total_LL), "-", round(total_UL), ")")
+    total_LL = sum(LL, na.rm = TRUE),
+    total_UL = sum(UL, na.rm = TRUE)
   )
+
 
 write.csv(death_summary,
           "output/Total_deaths.csv",
           row.names = FALSE)
 
 
-
-deaths_ts <- all_state_summaries %>%
-  filter(output == "ts_deaths")
-
-write.csv(deaths_ts,
-          "output/deaths_ts.csv",
-          row.names = FALSE)
-
-
 # Step 1: Filter only the variables you want for Maps
-State_sum <- read.csv("output/State_summaries.csv")
 filtered_data <- State_sum %>%
   filter(output %in% c("ts_deaths", "ts_exp_PEP", "ts_rabid_dogs"))
 

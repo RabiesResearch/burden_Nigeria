@@ -23,7 +23,7 @@ states$hdr = params$hdr_min[i] + (params$muslim_max[i] * states$muslim)
 # create dog pop by state as a function of estimated hdr
 states$dogs = states$humans / states$hdr
 
-write.csv(states, "data/state_data_with_burden_params.csv", row.names = F)
+write.csv(states, "data/state_data_with_burden_params_new.csv", row.names = F)
 
 # TO DO
 # incorporate urban/ peri-urban/ rural data from Grace

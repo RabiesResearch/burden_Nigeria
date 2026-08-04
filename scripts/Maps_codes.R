@@ -132,8 +132,36 @@ ggplot(Rabies_deaths_Nigeria) +
      theme(legend.position = c(0.98, 0.3)) +
      labs(title = "Estimated average  yearly Rabies deaths by states ")
    
+   
+   Rabies_all_varible_Nigeria$rabid_dog_cat <- cut(
+     Rabies_all_varible_Nigeria$Rabid_dogs_avg_per_year,
+     breaks = c(0,1500, 2500, 5000, 10000, 20000, 35000),
+     labels = c("0-1500", "1500-2500", "2500-5000", "5000-10000", "10000-20000", "20000-35000"),
+     include.lowest = TRUE
+   )
 
-
+   ggplot(Rabies_all_varible_Nigeria) +
+     geom_sf(aes(fill = rabid_dog_cat), color = "grey60", linewidth = 0.2) +
+     geom_sf_text(aes(label = ADM1_EN), size = 2) +
+     scale_fill_manual(
+       values = c(
+         
+         "0-1500" = "#ffffcc",
+         "1500-2500" = "#ffeda0",
+         "2500-5000" = "#feb24c",
+         "5000-10000" = "#fd8d3c",
+         "10000-20000" = "#f03b20",
+         "20000-35000" = "#bd0026"
+       ),
+       
+       
+       name = "Number_of _Rabid_dogs"
+     ) +
+     theme_void() +
+     theme(legend.position = c(0.98, 0.3)) +
+     labs(title = "Estimated Number of Rabid dogs per state in Nigeria ")
+   
+   
 
 
 

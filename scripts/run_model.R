@@ -11,6 +11,14 @@ parameters_df <- read.csv("./data/state_data_with_burden_params.csv") %>%
     base_vax_cov_owned = vc
   ) 
 
+parameters_df <- read.csv("./data/state_data_with_burden_params2.csv") %>%
+  dplyr::select(state, humans, hdr, pPEP, vc) %>%
+  dplyr::rename(
+    pop = humans,
+    HDR = hdr,
+    base_vax_cov_owned = vc
+  ) 
+
 # Calc dog vax coverage 
 parameters_df <- parameters_df %>%
   dplyr::mutate(

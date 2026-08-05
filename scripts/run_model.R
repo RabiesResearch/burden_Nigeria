@@ -4,23 +4,21 @@ source("./scripts/decision_tree.R")
 
 # Read state parameters
 parameters_df <- read.csv("./data/state_data_with_burden_params.csv") %>%
-  dplyr::select(state, humans, hdr, pPEP, vax_dogs) %>%
+  dplyr::select(state, humans, hdr, pPEP, vc) %>%
   dplyr::rename(
     pop = humans,
-    HDR = hdr
-  ) %>%
-  drop_na()
-
+    HDR = hdr,
+    base_vax_cov_owned = vc
+  ) 
 
 # Calc dog vax coverage 
 parameters_df <- parameters_df %>%
   dplyr::mutate(
-    base_vax_cov_owned = round(vax_dogs/ (pop/HDR),2),
+    base_vax_cov_owned = round(base_vax_cov_owned,2),
     target_vax_cov_owned = base_vax_cov_owned,
     HDR1 = floor(HDR),
     HDR2 = ceiling(HDR) 
-  ) %>% 
-  dplyr::select(-vax_dogs)
+  ) 
 
 
 

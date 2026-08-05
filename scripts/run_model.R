@@ -91,7 +91,7 @@ glimpse(all_state_summaries)
 names(all_state_summaries)
 
 write.csv(all_state_summaries,
-          "output/State_summaries.csv",
+          "output/State_summaries2.csv",
           row.names = FALSE)
 
 State_sum <- read.csv("output/State_summaries.csv")

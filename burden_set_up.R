@@ -6,7 +6,7 @@ head(states)
 head(params)
 
 # use index to select average values for now:
-i = which(params$level == "avg")
+i = which(params$level == "lowest")
 
 # create probability of receiving PEP by state as a function of poverty index
 states$pPEP = params$pPEP_L[i] +  
@@ -45,4 +45,5 @@ exposures = susdogs * incidence * avg_bites # 84k exposures
 no_pep <- exposures * (1-mean(states$pPEP, na.rm = TRUE))
 pdeath = 0.16
 pdeath * no_pep # 4500 deaths - seems ok!
+states$
 

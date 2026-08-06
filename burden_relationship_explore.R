@@ -109,11 +109,21 @@ prob = vc_int + (1-vc_int) * (1-1/(1 + exp(-vc_decline*(poverty - vc_slope_shift
 lines(poverty, prob,  col = "red")
 
 # Worst case scenario
-vc_decline = 10 # 
-vc_slope_shift = .001 # 
-vc_int = 0.05 # 
-prob = vc_int + (1-vc_int) * (1-1/(1 + exp(-vc_decline*(poverty - vc_slope_shift))))
-lines(poverty, prob,  col = "red")
+# vc_decline = 10 # 
+# vc_slope_shift = .001 # 
+# vc_int = 0.05 # 
+# prob = vc_int + (1-vc_int) * (1-1/(1 + exp(-vc_decline*(poverty - vc_slope_shift))))
+# lines(poverty, prob,  col = "red")
+
+# different case scenario
+vc_int <- 0.01 # your existing floor value — use whatever it actually is
+vc_decline <- 6
+target0 <- 0.4 # target coverage at poverty = 0
+L <- 1 - (target0 - vc_int) / (1 - vc_int) # solve for the vc_slope_shift that gives prob(poverty=0) = target0
+vc_slope_shift <- log((1 - L) / L) / vc_decline
+prob <- vc_int + (1 - vc_int) * (1 - 1 / (1 + exp(-vc_decline * (poverty - vc_slope_shift))))
+lines(poverty, prob, col = "blue")
+
 
 
 

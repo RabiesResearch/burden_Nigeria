@@ -44,7 +44,7 @@ outputs_to_keep <- c(
 
 
 # function to run per state
-run_one_state <- function(row, N = 10, horizon = 10, seed = 123) {
+run_one_state <- function(row, N = 1000, horizon = 10, seed = 123) {
   
   state_name <- row$state
   
@@ -92,7 +92,7 @@ glimpse(all_state_summaries)
 names(all_state_summaries)
 
 write.csv(all_state_summaries,
-          "output/State_summaries2.csv",
+          "output/State_summaries3.csv",
           row.names = FALSE)
 
 State_sum <- read.csv("output/State_summaries.csv")

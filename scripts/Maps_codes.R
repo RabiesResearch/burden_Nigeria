@@ -33,32 +33,34 @@ Rabies_deaths_Nigeria <- merge(states,Rabies_death_Map, by.x = "ADM1_EN", by.y =
 
 Rabies_deaths_Nigeria$death_category <- cut(
   Rabies_deaths_Nigeria$Total_deaths,
-  breaks = c(300, 500, 1000, 2000, 3000, 4000, 5000, 6000),
+  breaks = c(0,300, 500, 1000, 2000, 3000, 4000, 5000, 7500),
   labels = c(
-    "300-500", "500-1000", "1000-2000",
-    "2000-3000", "3000-4000", "4000-5000", "5000-6000"
+   "0-300" ,"300-500", "500-1000", "1000-2000",
+    "2000-3000", "3000-4000", "4000-5000", "5000-7500"
   ),
   include.lowest = TRUE
 )
 
 ggplot(Rabies_deaths_Nigeria) +
   geom_sf(aes(fill = death_category), color = "grey60", linewidth = 0.2) +
-  geom_sf_text(aes(label = ADM1_EN), size = 2) +
+  geom_sf_text(aes(label = ADM1_EN), size = 2.5) +
   scale_fill_manual(
     values = c(
+      "0-300"     = "#fff5f0",
       "300-500"   = "#fee0d2",
       "500-1000"  = "#fc9272",
       "1000-2000" = "#fb6a4a",
       "2000-3000" = "#ef3b2c",
       "3000-4000" = "#cb181d",
       "4000-5000" = "#800026",
-      "5000-6000" = "#66001f"
+      "5000-7500" = "#66001f"
     ),
     name = "Total deaths"
   ) +
   theme_void() +
   theme(legend.position = c(0.93, 0.3)) +
   labs(title = "Estimated Total Rabies Deaths by States in Nigeria (10-Year Period)")
+ggsave ("Estimated Total Rabies Deaths.jpeg",width = 12, height = 10)
 
 
   incidendce_per_100k<-read.csv("output/Annual_death_Incidence_Per_100,000_year.csv")%>%
@@ -69,14 +71,14 @@ ggplot(Rabies_deaths_Nigeria) +
   
   Incidence_per_100k_Nigeria$incidence_category <- cut(
     Incidence_per_100k_Nigeria$mean_annual_incidence,
-    breaks = c(0, 2, 4, 6, 8, 10, 12),
-    labels = c("0-2", "2-4", "4-6", "6-8", "8-10", "10-12"),
+    breaks = c(0, 2, 4, 6, 8, 10, 14),
+    labels = c("0-2", "2-4", "4-6", "6-8", "8-10", "10-14"),
     include.lowest = TRUE
   )
   
   ggplot(Incidence_per_100k_Nigeria) +
     geom_sf(aes(fill =incidence_category ), color = "grey60", linewidth = 0.2) +
-    geom_sf_text(aes(label = ADM1_EN), size = 2) +
+    geom_sf_text(aes(label = ADM1_EN), size = 2.5) +
     scale_fill_manual(
       values = c(
         
@@ -86,12 +88,14 @@ ggplot(Rabies_deaths_Nigeria) +
         "4-6"   = "#9ebcda",
         "6-8"   = "#8c96c6",
         "8-10"  = "#8856a7",
-        "10-12" = "#810f7c"
+        "10-14" = "#810f7c"
       ),
         name = " Average incidenence"
     ) +theme_void() +
     theme(legend.position = c(0.93, 0.25)) +
     labs(title = "Estimated  incidence per 100,000 per year by states in Nigeria")
+   ggsave ("Estimated  incidence per 100,000 per year.jpeg",width = 12, height = 10)
+  
   
 
    Rabies_Map <- read.csv("output/All_map_variables.csv") %>%

@@ -11,7 +11,7 @@ parameters_df <- read.csv("./data/state_data_with_burden_params.csv") %>%
     base_vax_cov_owned = vc
   ) 
 
-parameters_df <- read.csv("./data/state_data_with_burden_params2.csv") %>%
+parameters_df <- read.csv("./data/state_data_with_burden_params_new.csv") %>%
   dplyr::select(state, humans, hdr, pPEP, vc) %>%
   dplyr::rename(
     pop = humans,
@@ -94,10 +94,17 @@ write.csv(all_state_summaries,
           "output/State_summaries2.csv",
           row.names = FALSE)
 
-State_sum <- read.csv("output/State_summaries2.csv")
+State_sum <- read.csv("output/State_summaries3.csv")
 
+death_ts <- State_sum %>%
+filter(output == "ts_deaths")
 
+#filter out deaths per state
+write.csv(death_ts,
+          "output/deaths_ts.csv",
+          row.names = FALSE)
 
+#filter out and sum deaths for 10 years
 death_summary <- State_sum %>%
   filter(output == "ts_deaths") %>%
   group_by(state) %>%
@@ -107,7 +114,7 @@ death_summary <- State_sum %>%
     total_UL = sum(UL, na.rm = TRUE)
   )
 
-
+#export data
 write.csv(death_summary,
           "output/Total_deaths.csv",
           row.names = FALSE)

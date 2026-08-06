@@ -41,21 +41,45 @@ ggplot(Maps_Nigeria) +
   geom_sf(aes(fill = vax_cat), color = "grey60", linewidth = 0.2) +
   geom_sf_text(aes(label = ADM1_EN), size = 2, color = "black") +
       scale_fill_manual( values =  c(
-        "#f7fcf5",
-        "#d9f0d3",
-        "#addd8e",
-        "#78c679",
-        "#31a354",
-        "#006837"
         
+         "0–0.10"    = "#f7fcf5",
+        "0.10–0.20" = "#e5f5e0",
+        "0.20–0.30" = "#c7e9c0",
+        "0.30–0.40" = "#a1d99b",
+        "0.40–0.50" = "#74c476",
+        "0.50–0.60" = "#238b45"
       ),
+                                    
     name = "vaccination_coverage"
   ) +theme_void()+
   theme(
     legend.position = c(0.95, 0.2)
-  ) + 
-  labs (
-    title = "Estimated_dog_vaccination_coverage")
+  ) 
 
+Maps_Nigeria$pPEP_cat <- cut(
+  Maps_NigeriapPEP,
+  breaks = c(0, 0.4, 0.5,0.7, 1.0),
+  labels = c("0-0.4","0.4-0.5","0.5-0.7","0.7-1.0"
+  ),
+  include.lowest = TRUE
+)
 
+ggplot(Maps_Nigeria) +
+  geom_sf(aes(fill =pPEP_cat ), color = "grey60", linewidth = 0.2) +
+  geom_sf_text(aes(label = ADM1_EN), size = 2, color = "black") +
+  scale_fill_manual( values =  c(
+    "#f7fbff",
+    "#deebf7",
+    "#c6dbef",
+    "#9ecae1",
+    "#6baed6",
+    "#3182bd",
+    "#08519c"
+    
+  ),
+  name = "pPEP"
+  ) +theme_void()+
+  theme(
+    legend.position = c(0.95, 0.2)
+  ) 
 

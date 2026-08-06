@@ -11,8 +11,7 @@ parameters_df <- read.csv("./data/state_data_with_burden_params.csv") %>%
     base_vax_cov_owned = vc
   ) 
 
-parameters_df <- read.csv("./data/state_data_with_burden_params_new.csv") %>%
-  # parameters_df <- read.csv("./data/state_data_with_burden_params2.csv") %>%
+parameters_df <- read.csv("./data/state_data_with_burden_params2.csv") %>%
   dplyr::select(state, humans, hdr, pPEP, vc) %>%
   dplyr::rename(
     pop = humans,
@@ -83,7 +82,7 @@ run_one_state <- function(row, N = 1000, horizon = 10, seed = 123) {
 # run across states
 all_state_summaries <- map_dfr(
   seq_len(nrow(parameters_df)),
-  ~ run_one_state(parameters_df[.x, ], N = 10, horizon = 10, seed = 123 + .x)
+  ~ run_one_state(parameters_df[.x, ], N = 1000, horizon = 10, seed = 123 + .x)
 )
 
 
@@ -92,10 +91,10 @@ glimpse(all_state_summaries)
 names(all_state_summaries)
 
 write.csv(all_state_summaries,
-          "output/State_summaries3.csv",
+          "output/State_summaries2.csv",
           row.names = FALSE)
 
-State_sum <- read.csv("output/State_summaries.csv")
+State_sum <- read.csv("output/State_summaries2.csv")
 
 
 

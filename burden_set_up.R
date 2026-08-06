@@ -1,3 +1,4 @@
+
 # SET UP BURDEN MODEL 
 library(tidyverse)
 params <- read_csv("data/burden_rel_param_values.csv")
@@ -45,5 +46,5 @@ exposures = susdogs * incidence * avg_bites # 84k exposures
 no_pep <- exposures * (1-mean(states$pPEP, na.rm = TRUE))
 pdeath = 0.16
 pdeath * no_pep # 4500 deaths - seems ok!
-states$
+
 

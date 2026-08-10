@@ -31,55 +31,83 @@ Maps_Nigeria <- merge(states,pop_df, by.x = "ADM1_EN", by.y = "state", all.x = T
 
 Maps_Nigeria$vax_cat <- cut(
   Maps_Nigeria$vc,
-  breaks = c(0, 0.10, 0.20, 0.30, 0.40,0.50,0.60),
-  labels = c( "0–0.10", "0.10–0.20","0.20-0.30","0.30-0.40","0.40-0.50","0.50-0.60"
+  breaks = c(0.00 ,0.05, 0.10, 0.15, 0.25,0.35),
+  labels = c("0.00-0.05" ,"0.05-0.10", "0.10–0.15","0.15-0.25","0.25-0.35"
   ),
   include.lowest = TRUE
 )
 
 ggplot(Maps_Nigeria) +
   geom_sf(aes(fill = vax_cat), color = "grey60", linewidth = 0.2) +
-  geom_sf_text(aes(label = ADM1_EN), size = 2, color = "black") +
+  geom_sf_text(aes(label = ADM1_EN), size = 2.5, color = "black") +
       scale_fill_manual( values =  c(
         
-         "0–0.10"    = "#f7fcf5",
-        "0.10–0.20" = "#e5f5e0",
-        "0.20–0.30" = "#c7e9c0",
-        "0.30–0.40" = "#a1d99b",
-        "0.40–0.50" = "#74c476",
-        "0.50–0.60" = "#238b45"
+        "0.00-0.05"  ="#f7fcf5",
+        "0.05-0.10" = "#c7e9c0",
+        "0.10–0.15" = "#a1d99b",
+        "0.15-0.25" = "#74c476",
+        "0.25-0.35" ="#006d2c"
       ),
-                                    
-    name = "vaccination_coverage"
-  ) +theme_void()+
+      name = "Vaccination covererage"
+      ) +theme_void()+
   theme(
     legend.position = c(0.95, 0.2)
   ) 
 
 Maps_Nigeria$pPEP_cat <- cut(
-  Maps_NigeriapPEP,
-  breaks = c(0, 0.4, 0.5,0.7, 1.0),
-  labels = c("0-0.4","0.4-0.5","0.5-0.7","0.7-1.0"
+  Maps_Nigeria$pPEP,
+  breaks = c(0.4, 0.5,0.7, 1.0),
+  labels = c("0.4-0.5","0.5-0.7","0.7-1.0"
   ),
   include.lowest = TRUE
 )
 
 ggplot(Maps_Nigeria) +
   geom_sf(aes(fill =pPEP_cat ), color = "grey60", linewidth = 0.2) +
-  geom_sf_text(aes(label = ADM1_EN), size = 2, color = "black") +
-  scale_fill_manual( values =  c(
-    "#f7fbff",
-    "#deebf7",
-    "#c6dbef",
-    "#9ecae1",
-    "#6baed6",
-    "#3182bd",
-    "#08519c"
+  geom_sf_text(aes(label = ADM1_EN), size = 2.5, color = "black") +
+  scale_fill_manual( 
+         values =  c(
+  
+  "0.4-0.5"=  "#deebf7",
+  "0.5-0.7"=  "#3182bd",
+  "0.7-1.0"=  "#08519c"
     
-  ),
+   ),
   name = "pPEP"
   ) +theme_void()+
   theme(
     legend.position = c(0.95, 0.2)
   ) 
+Maps_Nigeria$pop_millions <- Maps_Nigeria$humans/ 1e6
+
+# Create custom categories with your ranges
+
+Maps_Nigeria$hdr_cat <- cut(
+  Maps_Nigeria$hdr,
+  breaks = c(3, 5, 10, 15, 20, 25,30),
+  labels = c("3-5","5-10","10-15","15-20","20-25","25-30"),
+  include.lowest = TRUE
+)
+
+  ggplot(Maps_Nigeria) +
+  geom_sf(aes(fill = hdr_cat), color = "grey60", linewidth = 0.2) +
+  geom_sf_text(aes(label = ADM1_EN), size = 2.5, color = "black") +
+  
+  scale_fill_manual(
+                      values = c(
+                    
+                          "3-5" = "#feedde",
+                          "5-10" = "#fdbe85",
+                          "10-15" = "#fd8d3c",
+                          "15-20" = "#f16913",
+                          "20-25" = "#d94801",
+                          "25-30" = "#8c2d04"
+                        ),
+           name = "hdr" ) +
+           theme_void() +
+  theme(
+    legend.position = c(0.90, 0.2))
+     
+
+
 

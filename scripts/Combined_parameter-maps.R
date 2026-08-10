@@ -134,7 +134,7 @@ Vc_map <-ggplot(Maps_Nigeria) +
     "0.15-0.25" = "#74c476",
     "0.25-0.35" ="#006d2c"
   ),
-  name = "Vaccination covererage"
+  name = "Vc"
   ) +theme_void()+
   theme(
     legend.position = c(0.9,0.2))

@@ -90,28 +90,32 @@ ggsave ("Estimated Total Rabies Deaths.jpeg",width = 12, height = 10)
         "8-10"  = "#8856a7",
         "10-14" = "#810f7c"
       ),
-        name = " Average incidenence"
+        name = " Annual incidenence"
     ) +theme_void() +
-    theme(legend.position = c(0.93, 0.25)) +
-    labs(title = "Estimated  incidence per 100,000 per year by states in Nigeria")
+    theme(legend.position = c(0.93, 0.25)) 
    ggsave ("Estimated  incidence per 100,000 per year.jpeg",width = 12, height = 10)
   
-  
+    
 
-   Rabies_Map <- read.csv("output/All_map_variables.csv") %>%
+   Rabies_Map <- read.csv("output/All_map_results_wide.csv") %>%
     rename(
-      states=state,
-      Avg_annual_deaths = ts_deaths_mean,
-      Avg_PEP_use_per_year = ts_exp_PEP_mean,
-      Rabid_dogs_avg_per_year = ts_rabid_dogs_mean
+      annual_rabies_deaths = ts_deaths,
+      Annual_PEP_vac_vial_use = ts_vaccine_vials,
+      Rabid_dogs_avg_per_year = ts_rabid_dogs,
+      annual_rabies_deaths_UL = ts_deaths_UL,
+      annual_rabies_deaths_LL = ts_deaths_LL,
+      Annual_PEP_vac_vial_use_UL = ts_vaccine_vials_UL,
+      Annual_PEP_vac_vial_use_LL = ts_vaccine_vials_LL,
+      Rabid_dogs_avg_per_year_UL = ts_rabid_dogs_UL,
+      Rabid_dogs_avg_per_year_LL = ts_rabid_dogs_LL
     )
   
-   Rabies_all_varible_Nigeria <- merge(states,Rabies_Map, by.x = "ADM1_EN", by.y = "states", all.x = TRUE)
+   Rabies_all_varible_Nigeria <- merge(states,Rabies_Map, by.x = "ADM1_EN", by.y = "state", all.x = TRUE)
    
    Rabies_all_varible_Nigeria$avg_deaths_cat <- cut(
-     Rabies_all_varible_Nigeria$Avg_annual_deaths,
-     breaks = c(0, 50, 100, 200, 300, 400, 500,600),
-     labels = c("0-50", "50-100", "100-200", "200-300", "300-400", "400-500","500-600"),
+     Rabies_all_varible_Nigeria$annual_rabies_deaths,
+     breaks = c(0, 50, 100, 200, 300, 400,600,800),
+     labels = c("0-50", "50-100", "100-200", "200-300", "300-400", "400-600","600-800"),
      include.lowest = TRUE
    )
    ggplot(Rabies_all_varible_Nigeria) +
@@ -121,20 +125,19 @@ ggsave ("Estimated Total Rabies Deaths.jpeg",width = 12, height = 10)
        values = c(
          
            "0-50"    = "#fee5d9",
-           "50-100"  = "#fcae91",
-           "100-200" = "#fb6a4a",
+           "50-100"  = "#fee0d2",
+           "100-200" = "#ef4434",
            "200-300" = "#de2d26",
            "300-400" = "#a50f15",
-           "400-500" = "#67000d",
-           "500-600" = "#3b0007"
+           "400-600" = "#800026",
+           "600-800" = "#67000d"
          ),
          
          
         name = "Average deaths per year"
      ) +
      theme_void() +
-     theme(legend.position = c(0.98, 0.3)) +
-     labs(title = "Estimated average  yearly Rabies deaths by states ")
+     theme(legend.position = c(0.98, 0.3))
    
    
    Rabies_all_varible_Nigeria$rabid_dog_cat <- cut(
@@ -150,20 +153,19 @@ ggsave ("Estimated Total Rabies Deaths.jpeg",width = 12, height = 10)
      scale_fill_manual(
        values = c(
          
-         "0-1500" = "#ffffcc",
-         "1500-2500" = "#ffeda0",
-         "2500-5000" = "#feb24c",
-         "5000-10000" = "#fd8d3c",
-         "10000-20000" = "#f03b20",
-         "20000-35000" = "#bd0026"
+         "0-1500" = "#fff7ec",
+         "1500-2500" = "#fee0d2",
+         "2500-5000" = "#fc8d56",
+         "5000-10000" = "#fb6a4a",
+         "10000-20000" = "#cb181d",
+         "20000-35000" = "#67000d"
        ),
        
        
        name = "Number_of _Rabid_dogs"
      ) +
      theme_void() +
-     theme(legend.position = c(0.98, 0.3)) +
-     labs(title = "Estimated Number of Rabid dogs per state in Nigeria ")
+     theme(legend.position = c(0.98, 0.3)) 
    
    
 

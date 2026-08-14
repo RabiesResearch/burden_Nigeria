@@ -1,3 +1,5 @@
+library(dplyr)
+library(tidyverse)
 deaths_ts<-read.csv("output/deaths_ts.csv")
 ggplot(deaths_ts, aes(x = as.numeric(factor(year)), y = Median, group = 1)) +
   geom_ribbon(aes(ymin = LL, ymax = UL), 
@@ -12,7 +14,12 @@ ggplot(deaths_ts, aes(x = as.numeric(factor(year)), y = Median, group = 1)) +
   scale_y_continuous(limits = c(0, NA)) +
   theme_bw() +
   theme(
-    axis.text.x = element_text( vjust = 0.5),
+    axis.text.x = element_text( size =10,vjust = 0.9),
+    axis.text.y = element_text(size = 10),
+    strip.text = element_text(size = 12),
+    axis.title.x = element_text(size = 18),
+    axis.title.y = element_text(size = 18),
     legend.position = "top")
 
 ggsave ("Time series.jpeg",width = 12, height = 10)
+

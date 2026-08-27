@@ -1,19 +1,32 @@
 
+#=========================================================================
+# Probabilistic decision tree framework model
+# Used to model the burden of rabies in Nigeria
 
-source("./scripts/decision_tree.R")
+#purpose
 
-# Read state parameters
-parameters_df <- read.csv("./data/state_data_with_burden_params.csv") %>%
-  dplyr::select(state, humans, hdr, pPEP, vc) %>%
-  dplyr::rename(
-    pop = humans,
-    HDR = hdr,
-    base_vax_cov_owned = vc
-  ) 
+#Import state-specific demographic and rabies-burden influencing parameters.
+# - Run the stochastic rabies decision-tree model for each state.
+# - Summarise annual model outcomes over a 10-year horizon.
+# - Export state-level-data of rabies deaths,number of rabid dogs,PEP Vaccine use,incidence of rabies deaths and total deaths.
+
+# Main assumptions:
+# - 1,000 stochastic simulations are run per state.
+# - Each simulation covers a 10-year time horizon.
+# - State-specific random seeds are used for reproducibility.
+# - The reported annual incidence is based on the median estimated deaths.
+# =============================================================================
+source("./scripts/decision_tree.R") # Load the external script containing decision_tree()
+                                    # containing required packages and model functions
+
+# Read in data set
 
 parameters_df <- read.csv("./data/state_data_with_burden_params_new.csv") %>%
-  dplyr::select(state, humans, hdr, pPEP, vc) %>%
-  dplyr::rename(
+  dplyr::select(state, humans, hdr, pPEP, vc) %>% # Retain only variables 
+                                                  #required for the model
+                                                                            
+  dplyr::rename(# Rename variables to match the argument
+                #names used by decision_tree()
     pop = humans,
     HDR = hdr,
     base_vax_cov_owned = vc
@@ -23,7 +36,11 @@ parameters_df <- read.csv("./data/state_data_with_burden_params_new.csv") %>%
 parameters_df <- parameters_df %>%
   dplyr::mutate(
     base_vax_cov_owned = round(base_vax_cov_owned,2),
+    # The target coverage is currently set equal to baseline coverage.
     target_vax_cov_owned = base_vax_cov_owned,
+    
+    # Create lower and upper integer values for the human-to-dog ratio.
+    # These values define the range passed to the stochastic model.
     HDR1 = floor(HDR),
     HDR2 = ceiling(HDR) 
   ) 
@@ -31,38 +48,42 @@ parameters_df <- parameters_df %>%
 
 
 # Run model
-load_rabies_models()  # call once per session
+load_rabies_models()  ## Load model components once per R session.
 
-outputs_to_keep <- c(
-  "ts_deaths",
-  "ts_exposures",
-  "ts_exp_PEP",
-  "ts_vaccine_vials",
-  "ts_rabid_dogs"
+outputs_to_keep <- c(# These are the annual time-series outcomes that will be summarised for
+                      # each state and each year of the model horizon.
+  
+  
+  "ts_deaths",         # Estimated human rabies deaths
+  "ts_exposures",      # Estimated human rabies exposures
+  "ts_exp_PEP",        # Exposed individuals receiving PEP
+  "ts_vaccine_vials",  # Estimated vaccine vials required
+  "ts_rabid_dogs"      # Estimated number of rabid dogs
 )
 
 
 # function to run per state
 run_one_state <- function(row, N = 1000, horizon = 10, seed = 123) {
   
-  state_name <- row$state
+  state_name <- row$state # Extract the state name for use in the final output.
   
+  # Run the stochastic  probabilistic decision-tree model.
   res <- decision_tree(
-    N = N,
-    pop = row$pop,
-    HDR = c(row$HDR1, row$HDR2),
-    horizon = horizon,
-    mu = 0.38,
-    k = 0.72,
-    pPEP_exposure = row$pPEP,
-    pDeath = 0.17,
-    pPrevent = 0.986,
-    rabies_inc = c(0.0075, 0.0125),
+    N = N,                            # Number of simulations
+    pop = row$pop,                    # Human population
+    HDR = c(row$HDR1, row$HDR2),      #Human-to-dog ratio range
+    horizon = horizon,                #Number of model years
+    mu = 0.38,                        #mean number of exposure per rabid dog
+    k = 0.72,                         #dispersion parameter of mu
+    pPEP_exposure = row$pPEP,         #Probability of PEP after exposure
+    pDeath = 0.17,                    #probability of death in absence of PEP 
+    pPrevent = 0.986,                   # probability that PEP prevents death
+    rabies_inc = c(0.0075, 0.0125),     #rabies incidence
     base_vax_cov_owned = row$base_vax_cov_owned,
     target_vax_cov_owned = row$target_vax_cov_owned,
     seed = seed
   )
-  
+  # Summarise stochastic uncertainty for each selected model outcome.
   summaries <- map_dfr(outputs_to_keep, function(output_name) {
     summarise_stochasticity(res[[output_name]]) %>%
       mutate(
@@ -85,21 +106,23 @@ all_state_summaries <- map_dfr(
   ~ run_one_state(parameters_df[.x, ], N = 1000, horizon = 10, seed = 123 + .x)
 )
 
-
+# Display the structure and column types.
 head(all_state_summaries)
 glimpse(all_state_summaries)
 names(all_state_summaries)
 
+ #write data set to output
 write.csv(all_state_summaries,
-          "output/State_summaries2.csv",
+          "output/State_summaries3.csv",
           row.names = FALSE)
-
+#read in data
 State_sum <- read.csv("output/State_summaries3.csv")
 
+#filter out deaths
 death_ts <- State_sum %>%
 filter(output == "ts_deaths")
 
-#filter out deaths per state
+#write to output
 write.csv(death_ts,
           "output/deaths_ts.csv",
           row.names = FALSE)
@@ -114,7 +137,7 @@ death_summary <- State_sum %>%
     total_UL = sum(UL, na.rm = TRUE)
   )
 
-#export data
+#export data to output
 write.csv(death_summary,
           "output/Total_deaths.csv",
           row.names = FALSE)
